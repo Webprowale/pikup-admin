@@ -15,32 +15,32 @@ import Link from 'next/link'
 const items = [
   {
     title: "Dashboard",
-    url: "#",
+    url: "dashboard",
     icon: LayoutDashboard,
   },
   {
     title: "Users",
-    url: "/users",
+    url: "/dashboard/users",
     icon: UsersRound,
   },
   {
     title: "Vendors",
-    url: "/vendors",
+    url: "/dashboard/vendors",
     icon: ChartNoAxesColumn,
   },
   {
     title: "Orders",
-    url: "/orders",
+    url: "/dashboard/orders",
     icon: BaggageClaim,
   },
   {
     title: "Riders",
-    url: "/riders",
+    url: "/dashboard/riders",
     icon: Bike,
   },
   {
     title: "Wallet",
-    url: "/wallet",
+    url: "/dashboard/wallet",
     icon: Wallet,
   },
 ]

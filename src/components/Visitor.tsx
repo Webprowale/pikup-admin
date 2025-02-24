@@ -1,14 +1,15 @@
-"use client"
+"use client";
 
-import { TrendingUp } from "lucide-react"
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { TrendingUp } from "lucide-react";
 import {
   Label,
   PolarGrid,
   PolarRadiusAxis,
   RadialBar,
   RadialBarChart,
-} from "recharts"
-
+} from "recharts";
 import {
   Card,
   CardContent,
@@ -16,14 +17,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { ChartConfig, ChartContainer } from "@/components/ui/chart"
+} from "@/components/ui/card";
+import { ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { API_URL } from "@/lib/config";
 
-export const description = "A radial chart with text"
-
-const chartData = [
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-]
+export const description = "A radial chart with text";
 
 const chartConfig = {
   visitors: {
@@ -33,14 +31,51 @@ const chartConfig = {
     label: "Safari",
     color: "hsl(var(--chart-2))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-export function Component() {
+export function UserComponent() {
+  const [totalUsers, setTotalUsers] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const token = Cookies.get("auth_token");
+        if (!token) {
+          throw new Error("No auth token found");
+        }
+
+        const response = await fetch(`${API_URL}/admin/all-users`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        setTotalUsers(data.length);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        setTotalUsers(0); 
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  const chartData = [
+    { browser: "safari", visitors: totalUsers || 0, fill: "var(--color-safari)" },
+  ];
+
   return (
     <Card className="flex flex-col bg-[#ECECEC]">
       <CardHeader className="items-center pb-0">
         <CardTitle>Pikup - User Visit</CardTitle>
-        <CardDescription>January - October 2024</CardDescription>
+        <CardDescription></CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -78,7 +113,7 @@ export function Component() {
                           y={viewBox.cy}
                           className="fill-foreground text-4xl font-bold"
                         >
-                          {chartData[0].visitors.toLocaleString()}
+                          {totalUsers !== null ? totalUsers.toLocaleString() : "Loading..."}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
@@ -88,7 +123,7 @@ export function Component() {
                           Visitors
                         </tspan>
                       </text>
-                    )
+                    );
                   }
                 }}
               />
@@ -105,5 +140,5 @@ export function Component() {
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }
