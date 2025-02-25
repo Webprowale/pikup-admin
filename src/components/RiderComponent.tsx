@@ -19,7 +19,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function UserComponent() {
+export function RiderComponent() {
   const [totalUsers, setTotalUsers] = useState<number | null>(null);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export function UserComponent() {
           throw new Error("No auth token found");
         }
 
-        const response = await fetch(`${API_URL}/admin/all-users`, {
+        const response = await fetch(`${API_URL}/admin/all-riders`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -65,7 +65,7 @@ export function UserComponent() {
   return (
     <Card className="flex flex-col bg-[#ECECEC]">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Pikup - User Visit</CardTitle>
+        <CardTitle>Pikup - Riders Visit</CardTitle>
         <CardDescription></CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">

@@ -1,3 +1,4 @@
+"use client";
 import { LayoutDashboard, UsersRound, ChartNoAxesColumn,BaggageClaim,Bike, Wallet, } from "lucide-react"
 import {
   Sidebar,
@@ -8,14 +9,15 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import Image from "next/image"
-import Link from 'next/link'
+} from "@/components/ui/sidebar";
+import Image from "next/image";
+import Cookies from "js-cookie"; 
+import { useRouter } from "next/navigation";
 // Menu items.
 const items = [
   {
     title: "Dashboard",
-    url: "dashboard",
+    url: "./dashboard",
     icon: LayoutDashboard,
   },
   {
@@ -46,6 +48,12 @@ const items = [
 ]
 
 export function AppSidebar() {
+  const router = useRouter();
+const handleLogout = () => {
+  Cookies.remove("auth_token"); 
+  router.push("/"); 
+};
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -75,7 +83,7 @@ export function AppSidebar() {
               </div>
              </div>
              <div className='logout ps-12 mt-4'>
-              <Link href='#' className='text-[#E22727] font-medium'>Log out</Link>
+              <button onClick={handleLogout} className='text-[#E22727] font-medium'>Log out</button>
              </div>
             </div>
           </SidebarGroupContent>

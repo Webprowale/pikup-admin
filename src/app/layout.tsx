@@ -1,8 +1,8 @@
+
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro} from "next/font/google";
 import "./globals.css";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 
 const beVietnam = Be_Vietnam_Pro({
   subsets: ["latin"],
@@ -23,7 +23,11 @@ export default function RootLayout({
     <html lang="en">
       <head>
       </head>
-      <body className={beVietnam.className}>{children} <ToastContainer /></body>
+      <body className={beVietnam.className}>
+  {children}
+ 
+</body>
+
     </html>
   );
 }

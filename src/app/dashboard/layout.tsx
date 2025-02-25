@@ -1,3 +1,4 @@
+"use client";
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro} from "next/font/google";
 import "../globals.css";
@@ -15,8 +16,6 @@ const beVietnam = Be_Vietnam_Pro({
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
-      </head>
       <body className={beVietnam.className}>
       <SidebarProvider className="bg-[#ECECEC]">
       <AppSidebar />
