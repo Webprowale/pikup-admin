@@ -1,5 +1,5 @@
 "use client";
-import { LayoutDashboard, UsersRound, ChartNoAxesColumn,BaggageClaim,Bike, Wallet, } from "lucide-react"
+import { LayoutDashboard, UsersRound, ChartNoAxesColumn, BaggageClaim, Bike, Wallet } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -11,13 +11,14 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
-import Cookies from "js-cookie"; 
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+
 // Menu items.
 const items = [
   {
     title: "Dashboard",
-    url: "./dashboard",
+    url: "/dashboard",
     icon: LayoutDashboard,
   },
   {
@@ -45,14 +46,19 @@ const items = [
     url: "/dashboard/wallet",
     icon: Wallet,
   },
-]
+];
 
 export function AppSidebar() {
   const router = useRouter();
-const handleLogout = () => {
-  Cookies.remove("auth_token"); 
-  router.push("/"); 
-};
+
+  const handleLogout = () => {
+    Cookies.remove("auth_token");
+    router.push("/");
+  };
+
+  const handleNavigation = (url: string) => {
+    router.push(url);
+  };
 
   return (
     <Sidebar>
@@ -65,30 +71,36 @@ const handleLogout = () => {
             <SidebarMenu className="text-[#1E1E1E] font-medium text-[17px] ps-2">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="p-3 hover:bg-[#FE76221A]">
-                    <a href={item.url}>
+                  <SidebarMenuButton
+                    asChild
+                    className="p-3 hover:bg-[#FE76221A]"
+                    onClick={() => handleNavigation(item.url)}
+                  >
+                    <div className="flex items-center gap-2">
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </div>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
             <div className="profile mt-[80%] ps-2">
-             <div className="flex gap-2  items-center">
-            <Image src='/profile.svg' width={40} height={40} alt='pikup admin' className='rounded-full' />
-            <div className='info'>
-             <h4 className='font-semibold'>Isaac Olawunmi</h4>
-              <span>Founder</span>
+              <div className="flex gap-2 items-center">
+                <Image src="/profile.svg" width={40} height={40} alt="pikup admin" className="rounded-full" />
+                <div className="info">
+                  <h4 className="font-semibold">Isaac Olawunmi</h4>
+                  <span>Founder</span>
+                </div>
               </div>
-             </div>
-             <div className='logout ps-12 mt-4'>
-              <button onClick={handleLogout} className='text-[#E22727] font-medium'>Log out</button>
-             </div>
+              <div className="logout ps-12 mt-4">
+                <button onClick={handleLogout} className="text-[#E22727] font-medium">
+                  Log out
+                </button>
+              </div>
             </div>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }

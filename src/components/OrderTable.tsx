@@ -1,94 +1,104 @@
 "use client"
+import { useEffect, useState } from "react";
+import { API_URL } from "@/lib/config";
+import Cookies from "js-cookie";
 import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table"
-  
-  const invoices = [
-    {
-      invoice: "INV001",
-      paymentStatus: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV002",
-      paymentStatus: "Pending",
-      totalAmount: "$150.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV003",
-      paymentStatus: "Unpaid",
-      totalAmount: "$350.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV004",
-      paymentStatus: "Paid",
-      totalAmount: "$450.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV005",
-      paymentStatus: "Paid",
-      totalAmount: "$550.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV006",
-      paymentStatus: "Pending",
-      totalAmount: "$200.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV007",
-      paymentStatus: "Unpaid",
-      totalAmount: "$300.00",
-      paymentMethod: "Credit Card",
-    },
-  ]
-  
-  export  function OrderTable() {
-    return (
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+type Product = {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  image: string;
+  vendor: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};
+
+type OrderItem = {
+  product: Product;
+  quantity: number;
+  price: number;
+  _id: string;
+};
+
+type Order = {
+  _id: string;
+  user: string;
+  vendor: string;
+  items: OrderItem[];
+  totalAmount: number;
+  status: string;
+  orderId: string;
+  deliveryTime: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};
+
+export function OrderTable() {
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const token = Cookies.get("auth_token");
+        const response = await fetch(`${API_URL}/order`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
     
-      <Table className='shadow-md p-5 border'>
-        <TableCaption>A list of user on App</TableCaption>
-        <TableHeader className='bg-[#FE7622] border'>
-          <TableRow>
-          <TableHead  className="font-bold text-2rem text-white w-[80px]">ID</TableHead>
-            <TableHead  className="font-bold text-2rem text-white">Name</TableHead>
-            <TableHead  className="font-bold text-2rem text-white">Email</TableHead>
-            <TableHead  className="font-bold text-2rem text-white">Joined</TableHead>
-            <TableHead  className="font-bold text-2rem text-white w-[150px]">Balance</TableHead>
-            <TableHead  className="font-bold text-2rem text-white w-[100px]">No of Purchase</TableHead>
-            <TableHead  className="font-bold text-2rem text-white w-[90px]">Deactivate Acc</TableHead>
-            
+        const data: { orders: Order[] } = await response.json(); 
+        console.log("API Response:", data);
+        setOrders(data.orders);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  return (
+    <Table className="shadow-md p-5 border">
+      <TableCaption>List of Orders</TableCaption>
+      <TableHeader className="bg-[#FE7622] border">
+        <TableRow>
+          <TableHead className="font-bold text-white">#</TableHead>
+          <TableHead className="font-bold text-white">Order ID</TableHead>
+          <TableHead className="font-bold text-white">User</TableHead>
+          <TableHead className="font-bold text-white">Vendor</TableHead>
+          <TableHead className="font-bold text-white">Total Amount</TableHead>
+          <TableHead className="font-bold text-white">Status</TableHead>
+          <TableHead className="font-bold text-white">Delivery Time</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody className="border">
+        {orders.map((order, index) => (
+          <TableRow key={order._id}>
+            <TableCell>{index + 1}</TableCell>
+            <TableCell>{order.orderId}</TableCell>
+            <TableCell>{order.user}</TableCell>
+            <TableCell>{order.vendor}</TableCell>
+            <TableCell>₦{order.totalAmount.toLocaleString()}</TableCell>
+            <TableCell>{order.status}</TableCell>
+            <TableCell>{new Date(order.deliveryTime).toLocaleString()}</TableCell>
           </TableRow>
-        </TableHeader>
-        <TableBody className='border'>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">{invoice.invoice}</TableCell>
-              <TableCell>{invoice.paymentStatus}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell>{invoice.totalAmount}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            {/* <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell> */}
-          </TableRow>
-        </TableFooter>
-      </Table>
-    )
-  }
-  
+        ))}
+      </TableBody>
+    </Table>
+  );
+}

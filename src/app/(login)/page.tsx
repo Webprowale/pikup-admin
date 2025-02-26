@@ -44,7 +44,6 @@ export default function Page() {
       router.push("/dashboard");
     } catch (error: any) {
       setMeg("Invalid Credential");
-      console.error(error);
     } finally {
       setLoading(false);
     }
