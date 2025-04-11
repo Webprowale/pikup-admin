@@ -43,6 +43,7 @@ export function RiderComponent() {
         }
 
         const data = await response.json();
+        console.log(data);
 
         if (data?.data && Array.isArray(data.data)) {
           setTotalUsers(data.data.length);
